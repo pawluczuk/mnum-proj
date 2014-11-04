@@ -2,6 +2,7 @@ function [ A , B ] = generateMatrix( option, equations )
 %GENERATEMATRIX Generowanie macierzy z danymi
 %   option - który zestaw danych generujemy (1,2 lub 3)
 %   equations - liczba rownan
+
 A = zeros(equations);       % empty A array with dimensions [equations x equations]
 B = zeros(equations,1);     % empty B array with dimensions [equations x 1]
 

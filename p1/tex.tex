@@ -1,0 +1,157 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{hyperref}
+
+
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{MNUM Projekt, zadanie 1.10}
+\author{Monika Pawluczuk, nr indeksu 246428}
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+
+\section{Zadanie 1}
+
+\subsection{Treść polecenia}
+
+Proszę napisać program wyznaczający dokładność maszynową komputera i wyznaczyć ją na swoim komputerze.
+
+\subsection{Zastosowane algorytmy}
+
+Dokładność maszynowa to maksymalny błąd względny reprezentacji zmiennoprzecinkowej równy 2 do -t, gdzie t to liczba bitów mantysy - a więc zależny wyłącznie jej liczby. Zgodnie z przyjętą konwencją, będę go oznaczać jako eps.
+Równoważną definicją jest również najmniejsza dodatnia liczba maszynowa g taka, że zachodzi relacja 
+\begin{equation}
+fl(1 + g) > 1, tzn. eps = min \{  g \in M : fl(1 + g) > 1, g > 0\}
+\end{equation}
+Zgodnie z drugą definicją, przyjmę początkowy eps jako 1. Będę zmniejszać eps o połowę w każdej iteracji, dopóki eps + 1 > 1 (czyli eps > 0). Wyjście z pętli będzie oznaczało, że znaleźliśmy najmniejszy możliwy błąd.
+
+\subsection{Implementacja użytych algorytmów}
+
+\begin{verbatim}
+function [ t, eps ] = machinePrecision()
+%MACHINEPRECISION Return computer's machine precision
+%   Return the least numeric value that is threated by the computer as
+%   value above 0.
+    eps = 1.0;
+    t = 0;
+    while (1.0 + eps/2.0 > 1.0)
+        eps = eps/2.0;
+        t = t + 1;
+    end
+    [t, eps];
+end
+
+\end{verbatim}
+
+\subsection{Otrzymane wyniki oraz komentarz}
+
+\begin{verbatim}
+>> [t, eps] = machinePrecision()
+t =
+    52
+eps =
+   2.2204e-16
+>> eps + 1.0 > 1.0
+ans =
+     1
+\end{verbatim}
+A więc liczba bitów mantysy to 52, natomiast dokładnośc maszynowa wynosi 2.2204e-16. Jest to wynik zgodny ze standardem IEEE 754 dla liczb zmiennoprzecinkowych podwójnej precyzji.
+
+\section{Zadanie 2}
+
+\subsection{Treść polecenia}
+
+Proszę napisać program rozwiązując układ n równań liniowych Ax=b wykorzystując podaną metodę. Proszę zastosować program do rozwiązania podanych niżej układów równań dla rosnącej liczby równań n = 10, 20, 40, 80, 160, …. Liczbę tych równań proszę zwiększać do momentu, gdy czas potrzebny na rozwiązanie układu staje się zbyt duży/metoda zawodzi.
+Metoda: Eliminacja Gaussa z częściowym wyborem elementu podstawowego, 3 zestawy danych.
+Dla każdego rozwiązania proszę obliczyć błąd rozwiązania (liczony jako norma residuum) i dla każdego układu równań proszę wykonać rysunek zależności tego błędu od liczby równań n.
+
+\subsection{Zastosowane algorytmy}
+Algorytm eliminacji Gaussa dzieli się na dwa etapy:
+
+1. Eliminacja zmiennych - w wyniku przekształceń macierzy A i wektora b otrzymamy równoważny układ równań z macierzą trójkątną górną.
+
+2. Postępowanie odwrotne (ang. back-substitution) - stosujemy algorytm rozwiązania układu z macierzą trójkątną.
+
+\subsection{Implementacja użytych algorytmów}
+
+Generowanie macierzy A i b dla każdego zestawu danych
+
+\begin{verbatim}
+
+dupa
+
+\end{varbatim}
+
+
+\subsection{Otrzymane wyniki oraz komentarz}
+
+\section{Zadanie 3}
+
+\subsection{Treść polecenia}
+
+Proszę napisać program rozwiązujący układ n równań liniowych Ax=b wykorzystując metodę Jacobiego i użyć go do rozwiązania poniższego układu równań liniowych:
+Proszę sprawdzić dokładność rozwiązania oraz spróbować zastosować zaprogramowaną metodę do rozwiązania układów równań z zadania 2.
+
+\subsection{Zastosowane algorytmy}
+
+\subsection{Implementacja użytych algorytmów}
+
+\subsection{Otrzymane wyniki oraz komentarz}
+
+\end{document}

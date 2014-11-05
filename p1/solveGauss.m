@@ -15,6 +15,7 @@ for i = 1 : 3
         [ A, b ] = generateMatrix(i, equations_number);
         r = gaussElimination(A, b);
         results(n) = r;
+        r
         iterationsTable(n) = equations_number;
     end
     [iterationsTable results]
@@ -22,7 +23,7 @@ for i = 1 : 3
     figure()
     plot(iterationsTable, results)
     title(titleString)
-    xlabel('Ilosc iteracji')
+    xlabel('Liczba rownan')
     ylabel('Norma residuum')
 end
 

@@ -525,11 +525,40 @@ end
 
 \subsection{Otrzymane wyniki oraz komentarz}
 \subsubsection{Wyniki dla danego układu równań}
+\begin{verbatim}
+>> A = [25 2 -18 1; 1 17 5 -8; -2 8 -21 5; 1 2 -1 13]
 
+A =
+
+    25     2   -18     1
+     1    17     5    -8
+    -2     8   -21     5
+     1     2    -1    13
+
+>> b = [5 46 184 2]'
+
+b =
+
+     5
+    46
+   184
+     2
+ 
+>> Jacob(A,b, 1000)
+Osiagnieto zadany warunek stopu: ||x^(k+1) - x^(k)|| < esp dla wartosci:
+Liczba iteracji:
+    28
+
+x = 
+   -4.9584
+    4.6385
+   -6.6876
+   -0.6928
+\end{verbatim}
 
 \subsection{Wyniki dla układów równań z zadania 2}
 Udało się otrzymać wyniki dla każdego rodzaju danych dla macierzy o niewielkich rozmiarach, przy 10 iteracji zaczęły występować błędy.
 
 Liczba iteracji wahała się w granicach do ok. 100 dla tolerancji ustalonej na 1e-10.
-Metoda ta działa zdecydowanie szybciej w porównaniu do metody z zadania drugiego, natomiast jest też mniej dokładna.
+Metoda ta działa zdecydowanie szybciej w porównaniu do metody z zadania drugiego, natomiast jest też mniej dokładna. Plusem tej metody jest możliwość ustalenia liczby iteracji, jednak wymaga ona ustalenia własnego warunku stopu (tolerancji dla której wynik jest zadowalający).
 \end{document}

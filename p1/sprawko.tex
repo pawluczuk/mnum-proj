@@ -58,7 +58,7 @@
 
 %%% The "real" document content comes below...
 
-\title{MNUM Projekt, zadanie 1.10}
+\title{MNUM Projekt, zadanie 1.19}
 \author{Monika Pawluczuk, nr indeksu 246428}
 %\date{} % Activate to display a given date or no date (if empty),
          % otherwise the current date is printed 
@@ -500,8 +500,40 @@ k = 1;
 % szukany wektor - zaczynamy od samych zer
 x = zeros(n,1);
 
+
+%warunek dostateczny zbieznosci metody jacobiego:
+for i = 1 : n
+   %dominacja wierszowa
+   disp(i);
+   dominacjaWierszowa = 1;
+   for i = 1 : n 
+    if ( abs(A(k,k)) < A(i, k) )
+        dominacjaWierszowa = 0;
+    end
+   end
+   if (dominacjaWierszowa == 1)
+       disp('Warunek dominacji wierszowej spelniony')
+   else
+       disp('Warunek dominacji wierszowej nie jest spelniony')
+   end
+   
+   %dominacja kolumnowa
+   dominacjaKolumnowa = 1;
+   for i = 1 : n 
+    if ( abs(A(k,k)) < A(k, i) )
+        dominacjaKolumnowa = 0;
+    end
+   end
+   if (dominacjaKolumnowa == 1)
+       disp('Warunek dominacji kolumnowej spelniony')
+   else
+       disp('Warunek dominacji kolumnowej nie jest spelniony')
+   end
+end
+   
 while k <= iterations
    x(:,k + 1) = Tj * x(:, k) + cj;
+   
    if norm(x(:,k + 1) - x(:, k)) < esp
       disp('Osiagnieto zadany warunek stopu: ||x^(k+1) - x^(k)|| < esp dla wartosci:')
       disp('Liczba iteracji:');
@@ -545,6 +577,22 @@ b =
      2
  
 >> Jacob(A,b, 1000)
+     1
+
+Warunek dominacji wierszowej spelniony
+Warunek dominacji kolumnowej spelniony
+     2
+
+Warunek dominacji wierszowej spelniony
+Warunek dominacji kolumnowej spelniony
+     3
+
+Warunek dominacji wierszowej spelniony
+Warunek dominacji kolumnowej spelniony
+     4
+
+Warunek dominacji wierszowej spelniony
+Warunek dominacji kolumnowej spelniony
 Osiagnieto zadany warunek stopu: ||x^(k+1) - x^(k)|| < esp dla wartosci:
 Liczba iteracji:
     28
@@ -554,10 +602,15 @@ x =
     4.6385
    -6.6876
    -0.6928
+
 \end{verbatim}
 
 \subsection{Wyniki dla układów równań z zadania 2}
-Udało się otrzymać wyniki dla każdego rodzaju danych dla macierzy o niewielkich rozmiarach, przy 10 iteracji zaczęły występować błędy.
+Udało się otrzymać wyniki dla każdego rodzaju danych dla macierzy o niewielkich rozmiarach.
+
+Zestaw danych nr 1 ma najwieksze wartości na diagonali, a więc warunki dostateczne zbieżności zawsze są spełnione (zarówno dominacja wierszowa jak i kolumnowa).
+
+W zestawie danych nr 3 dominacja wierszowa i kolumnowa nie zawsze była spełniona, i części układów nie udało się rozwiązać.
 
 Liczba iteracji wahała się w granicach do ok. 100 dla tolerancji ustalonej na 1e-10.
 Metoda ta działa zdecydowanie szybciej w porównaniu do metody z zadania drugiego, natomiast jest też mniej dokładna. Plusem tej metody jest możliwość ustalenia liczby iteracji, jednak wymaga ona ustalenia własnego warunku stopu (tolerancji dla której wynik jest zadowalający).
